@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>schedule for Electrical engineering department</title>
+    <link rel="icon" href="immmg.png">
+    <script src="firestore.js" defer type="module"></script>
+    <script src="database.js" defer type="module"></script>
+    <script src="gettingdata.js" defer type="module"></script>
+    <script src="download.js" defer type="module"></script>
+
+
+
+    <style>
+        #imghome img {
+            /* filter: grayscale(100%); */
+            filter: opacity(0.3);
+        }
+
+        #imghome img:hover {
+            /* filter: grayscale(0%); */
+            filter: opacity(1);
+        }
+
+        #imghome {
+            position: relative;
+            top: 140px;
+            height: 400px;
+            background-color: #E7BCDE;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+
+            /* width: 10;  */
+        }
+
+        .ttabl {
+            /* display: flex;
+            justify-content: center; */
+            width: 95%;
+            position: relative;
+            left: calc(5%/2);
+            overflow: hidden;
+        }
+
+        tbody {
+            background-color: #E0AED0;
+            color: white;
+
+        }
+
+        body {
+
+            margin: 0;
+            padding: 0;
+            font-family: cursive;
+            background-color: #FFE5E5;
+            font-weight: bold;
+            overflow-y: hidden;
+            overflow-x: hidden;
+
+
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+
+        table {
+            /* width: 100%; */
+            height: 670px;
+            border-collapse: collapse;
+            margin-top: 8px;
+
+        }
+
+        th,
+        td {
+            border: 1px solid #756AB6;
+            /* padding: 8px; */
+            text-align: center;
+
+        }
+
+        /* th {
+            background-color: #69b8a89d;
+            color: white;
+        } */
+
+        tr:nth-child(even) {
+            background-color: #E0AED0;
+            color: white;
+        }
+
+        @media screen and (max-width: 800px) {
+            table {
+                font-size: 12px;
+            }
+        }
+
+        .container {
+            background-color: white;
+            padding: 1px;
+            transition: transform 0.3s;
+            cursor: pointer;
+
+        }
+
+        .container:hover {
+            transform: scale(1.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Add a black background color to the top navigation */
+        .topnav {
+            background-color: #756AB6;
+            overflow-x: hidden;
+            border-radius: 0px 0px 25px 25px;
+
+        }
+
+        /* Style the links inside the navigation bar */
+        .topnav a,
+        .dow {
+            float: left;
+            color: #f2f2f2;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 17px;
+
+        }
+
+        .dow {
+            background-color: #756AB6;
+            border: none;
+            cursor: pointer;
+
+        }
+
+
+        /* Change the color of links on hover */
+        .topnav a:hover,
+        .dow:hover {
+            background-color: #ddd;
+            color: #FFE5E5;
+        }
+
+        /* Add a color to the active/current link */
+        .topnav a.active {
+            background-color: #AC87C5;
+            color: white;
+        }
+
+        #loadingIcon {
+            display: none;
+            /* Add your custom styles for the loading icon */
+        }
+    </style>
+</head>
+
+<body onload="func()">
+    <nav>
+        <div class="topnav">
+            <a class="active" href="#home" id="home" onclick="openhome()">Home</a>
+            <a href="#news" onclick="setadept(`computer`); closehome()" id="call1">Computer and Control</a>
+            <a href="#contact" onclick="setadept(`communication`); closehome()" id="call2">Electronics and
+                communication</a>
+            <a href="#about" onclick="setadept(`electrical`); closehome()" id="call3">Electrical power</a>
+            <input type="button" id="downloadButton" style="float:right;font-family: cursive;font-weight: bold;"
+                class="dow" value="download">
+            <input type="button" id="singout" style="float:right;font-family: cursive;font-weight: bold;" class="dow"
+                value="Signin" onclick="window.location.href = 'index.html';">
+        </div>
+
+    </nav>
+
+    <div class="ttabl">
+        <table id="mytable">
+            <tr>
+                <td rowspan="2">the year</td>
+                <td rowspan="2">details</td>
+                <td colspan="10">sunday</td>
+                <td colspan="10">monday</td>
+                <td colspan="10">tuesday</td>
+                <td colspan="10">wednesday</td>
+                <td colspan="10">thursday</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>4</td>
+                <td>5</td>
+                <td>6</td>
+                <td>7</td>
+                <td>8</td>
+                <td>9</td>
+                <td>10</td>
+
+
+            </tr>
+            <tr>
+                <td rowspan="3"> first year</td>
+                <td> course</td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `sunday` , `8:30to10:15`);" class="container"
+                    id="sun_8_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `sunday` , `10:15to12:30`);" class="container"
+                    id="sun_10_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `sunday` , `12:30to2`);" class="container"
+                    id="sun_12_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `sunday` , `2to3:30`);" class="container"
+                    id="sun_2_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `sunday` , `3:30to5`);" class="container"
+                    id="sun_3_1">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `monday` , `8:30to10:15`);" class="container"
+                    id="mon_8_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `monday` , `10:15to12:30`);" class="container"
+                    id="mon_10_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `monday` , `12:30to2`);" class="container"
+                    id="mon_12_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `monday` , `2to3:30`);" class="container"
+                    id="mon_2_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `monday` , `3:30to5`);" class="container"
+                    id="mon_3_1">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `tuesday` , `8:30to10:15`);" class="container"
+                    id="tue_8_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `tuesday` , `10:15to12:30`);" class="container"
+                    id="tue_10_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `tuesday` , `12:30to2`);" class="container"
+                    id="tue_12_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `tuesday` , `2to3:30`);" class="container"
+                    id="tue_2_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `tuesday` , `3:30to5`);" class="container"
+                    id="tue_3_1">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `wednesday` , `8:30to10:15`);"
+                    class="container" id="wed_8_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `wednesday` , `10:15to12:30`);"
+                    class="container" id="wed_10_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `wednesday` , `12:30to2`);" class="container"
+                    id="wed_12_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `wednesday` , `2to3:30`);" class="container"
+                    id="wed_2_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `wednesday` , `3:30to5`);" class="container"
+                    id="wed_3_1">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `thursday` , `8:30to10:15`);" class="container"
+                    id="thu_8_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `thursday` , `10:15to12:30`);"
+                    class="container" id="thu_10_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `thursday` , `12:30to2`);" class="container"
+                    id="thu_12_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `thursday` , `2to3:30`);" class="container"
+                    id="thu_2_1">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`one` , `thursday` , `3:30to5`);" class="container"
+                    id="thu_3_1">
+                </td>
+
+
+
+
+            </tr>
+            <tr>
+                <td>the prof</td>
+            </tr>
+            <tr>
+                <td> the place</td>
+            </tr>
+
+            <tr>
+                <td rowspan="3"> second year</td>
+                <td> course</td>
+
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `sunday` , `8:30to10:15`);" class="container"
+                    id="sun_8_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `sunday` , `10:15to12:30`);" class="container"
+                    id="sun_10_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `sunday` , `12:30to2`);" class="container"
+                    id="sun_12_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `sunday` , `2to3:30`);" class="container"
+                    id="sun_2_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `sunday` , `3:30to5`);" class="container"
+                    id="sun_3_2">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `monday` , `8:30to10:15`);" class="container"
+                    id="mon_8_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `monday` , `10:15to12:30`);" class="container"
+                    id="mon_10_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `monday` , `12:30to2`);" class="container"
+                    id="mon_12_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `monday` , `2to3:30`);" class="container"
+                    id="mon_2_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `monday` , `3:30to5`);" class="container"
+                    id="mon_3_2">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `tuesday` , `8:30to10:15`);" class="container"
+                    id="tue_8_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `tuesday` , `10:15to12:30`);" class="container"
+                    id="tue_10_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `tuesday` , `12:30to2`);" class="container"
+                    id="tue_12_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `tuesday` , `2to3:30`);" class="container"
+                    id="tue_2_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `tuesday` , `3:30to5`);" class="container"
+                    id="tue_3_2">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `wednesday` , `8:30to10:15`);"
+                    class="container" id="wed_8_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `wednesday` , `10:15to12:30`);"
+                    class="container" id="wed_10_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `wednesday` , `12:30to2`);" class="container"
+                    id="wed_12_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `wednesday` , `2to3:30`);" class="container"
+                    id="wed_2_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `wednesday` , `3:30to5`);" class="container"
+                    id="wed_3_2">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `thursday` , `8:30to10:15`);" class="container"
+                    id="thu_8_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `thursday` , `10:15to12:30`);"
+                    class="container" id="thu_10_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `thursday` , `12:30to2`);" class="container"
+                    id="thu_12_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `thursday` , `2to3:30`);" class="container"
+                    id="thu_2_2">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`two` , `thursday` , `3:30to5`);" class="container"
+                    id="thu_3_2">
+                </td>
+
+
+            </tr>
+            <tr>
+                <td>the prof</td>
+            </tr>
+            <tr>
+                <td> the place</td>
+            </tr>
+
+            <tr>
+                <td rowspan="3"> third year</td>
+                <td> course</td>
+
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `sunday` , `8:30to10:15`);" class="container"
+                    id="sun_8_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `sunday` , `10:15to12:30`);"
+                    class="container" id="sun_10_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `sunday` , `12:30to2`);" class="container"
+                    id="sun_12_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `sunday` , `2to3:30`);" class="container"
+                    id="sun_2_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `sunday` , `3:30to5`);" class="container"
+                    id="sun_3_3">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `monday` , `8:30to10:15`);" class="container"
+                    id="mon_8_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `monday` , `10:15to12:30`);"
+                    class="container" id="mon_10_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `monday` , `12:30to2`);" class="container"
+                    id="mon_12_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `monday` , `2to3:30`);" class="container"
+                    id="mon_2_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `monday` , `3:30to5`);" class="container"
+                    id="mon_3_3">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `tuesday` , `8:30to10:15`);"
+                    class="container" id="tue_8_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `tuesday` , `10:15to12:30`);"
+                    class="container" id="tue_10_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `tuesday` , `12:30to2`);" class="container"
+                    id="tue_12_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `tuesday` , `2to3:30`);" class="container"
+                    id="tue_2_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `tuesday` , `3:30to5`);" class="container"
+                    id="tue_3_3">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `wednesday` , `8:30to10:15`);"
+                    class="container" id="wed_8_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `wednesday` , `10:15to12:30`);"
+                    class="container" id="wed_10_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `wednesday` , `12:30to2`);" class="container"
+                    id="wed_12_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `wednesday` , `2to3:30`);" class="container"
+                    id="wed_2_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `wednesday` , `3:30to5`);" class="container"
+                    id="wed_3_3">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `thursday` , `8:30to10:15`);"
+                    class="container" id="thu_8_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `thursday` , `10:15to12:30`);"
+                    class="container" id="thu_10_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `thursday` , `12:30to2`);" class="container"
+                    id="thu_12_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `thursday` , `2to3:30`);" class="container"
+                    id="thu_2_3">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`three` , `thursday` , `3:30to5`);" class="container"
+                    id="thu_3_3">
+                </td>
+
+
+
+            </tr>
+            <tr>
+                <td>the prof</td>
+            </tr>
+            <tr>
+                <td> the place</td>
+            </tr>
+
+            <tr>
+                <td rowspan="3"> fourth year</td>
+                <td> course</td>
+
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `sunday` , `8:30to10:15`);" class="container"
+                    id="sun_8_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `sunday` , `10:15to12:30`);" class="container"
+                    id="sun_10_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `sunday` , `12:30to2`);" class="container"
+                    id="sun_12_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `sunday` , `2to3:30`);" class="container"
+                    id="sun_2_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `sunday` , `3:30to5`);" class="container"
+                    id="sun_3_4">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `monday` , `8:30to10:15`);" class="container"
+                    id="mon_8_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `monday` , `10:15to12:30`);" class="container"
+                    id="mon_10_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `monday` , `12:30to2`);" class="container"
+                    id="mon_12_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `monday` , `2to3:30`);" class="container"
+                    id="mon_2_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `monday` , `3:30to5`);" class="container"
+                    id="mon_3_4">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `tuesday` , `8:30to10:15`);" class="container"
+                    id="tue_8_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `tuesday` , `10:15to12:30`);"
+                    class="container" id="tue_10_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `tuesday` , `12:30to2`);" class="container"
+                    id="tue_12_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `tuesday` , `2to3:30`);" class="container"
+                    id="tue_2_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `tuesday` , `3:30to5`);" class="container"
+                    id="tue_3_4">
+                </td>
+
+
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `wednesday` , `8:30to10:15`);"
+                    class="container" id="wed_8_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `wednesday` , `10:15to12:30`);"
+                    class="container" id="wed_10_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `wednesday` , `12:30to2`);" class="container"
+                    id="wed_12_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `wednesday` , `2to3:30`);" class="container"
+                    id="wed_2_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `wednesday` , `3:30to5`);" class="container"
+                    id="wed_3_4">
+                </td>
+
+
+
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `thursday` , `8:30to10:15`);"
+                    class="container" id="thu_8_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `thursday` , `10:15to12:30`);"
+                    class="container" id="thu_10_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `thursday` , `12:30to2`);" class="container"
+                    id="thu_12_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `thursday` , `2to3:30`);" class="container"
+                    id="thu_2_4">
+                </td>
+                <td colspan="2" rowspan="3" onclick="settingData(`four` , `thursday` , `3:30to5`);" class="container"
+                    id="thu_3_4">
+                </td>
+
+
+
+            </tr>
+            <tr>
+                <td>the prof</td>
+            </tr>
+            <tr>
+                <td> the place</td>
+            </tr>
+        </table>
+    </div>
+
+
+
+    <div id="imghome">
+        <a style=" text-decoration: none; font-weight: bold; font-family: cursive; "
+            href="http://eng.psu.edu.eg/%d8%aa%d9%88%d8%b5%d9%8a%d9%81-%d9%82%d8%b3%d9%85-%d8%a7%d9%84%d9%87%d9%86%d8%af%d8%b3%d8%a9-%d8%a7%d9%84%d9%83%d9%87%d8%b1%d8%a8%d9%8a%d8%a9-%d8%b4%d8%b9%d8%a8%d8%a9-%d8%ad%d8%a7%d8%b3%d8%a8%d8%a7/">
+            <div><img src="pro.png" width="100px"></div>
+            <span style="margin-left: 10px;"> Computer </span>
+        </a>
+        <a style="width: 100px;  text-decoration: none; font-weight: bold; font-family: cursive; "
+            href="http://eng.psu.edu.eg/%d8%aa%d9%88%d8%b5%d9%8a%d9%81-%d9%82%d8%b3%d9%85-%d8%a7%d9%84%d9%87%d9%86%d8%af%d8%b3%d8%a9-%d8%a7%d9%84%d9%83%d9%87%d8%b1%d8%a8%d9%8a%d8%a9-%d8%b4%d8%b9%d8%a8%d8%a9-%d8%a5%d9%84%d9%83%d8%aa%d8%b1/">
+            <div><img src="com.png" width="100px"></div>
+            <span style="margin-left: 6px;"> Electronics </span>
+        </a>
+        <a style=" text-decoration: none; font-weight: bold; font-family: cursive; "
+            href="http://eng.psu.edu.eg/%d8%aa%d9%88%d8%b5%d9%8a%d9%81-%d9%82%d8%b3%d9%85-%d8%a7%d9%84%d9%87%d9%86%d8%af%d8%b3%d8%a9-%d8%a7%d9%84%d9%83%d9%87%d8%b1%d8%a8%d9%8a%d8%a9-%d8%b4%d8%b9%d8%a8%d8%a9-%d9%82%d9%88%d9%89-%d9%88%d8%a2/">
+            <div><img src="elect.png" width="90px"></div>
+            <span style="margin-left: 7px;"> Electrical </span>
+
+        </a>
+
+
+    </div>
+
+
+
+    <script>
+
+        function closehome() {
+            var modal = document.getElementById("imghome");
+            modal.style.display = "none";
+
+        }
+        function openhome() {
+            var modal = document.getElementById("imghome");
+            modal.style.display = "block";
+
+        }
+        function settingData(year, day, time) {
+
+            window.yeart = year;
+            window.dayt = day;
+            window.timet = time;
+
+        }
+        function setadept(dept) {
+            window.dept = dept;
+        }
+
+        function func() {
+
+            const loadingIcon = document.getElementById('loadingIcon');
+            loadingIcon.style.display = 'block';
+
+        }
+        const myTable = document.getElementById('mytable');
+        myTable.style.display = 'none';
+
+
+    </script>
+</body>
+
+</html>
